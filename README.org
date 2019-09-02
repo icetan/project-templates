@@ -2,7 +2,7 @@
 
 Given a project template:
 
-#+BEGIN_SRC bash :results output
+#+BEGIN_SRC bash :results output :exports both
 tree test-project
 cat test-project/%NAME1%/%NAME2%/%NAME2%-hello.txt
 #+END_SRC
@@ -22,11 +22,12 @@ Test project
 %GREET%
 
 How are you?
+
 #+end_example
 
 Now run template.sh with a template folder as input:
 
-#+BEGIN_SRC bash :results output
+#+BEGIN_SRC bash :results output :exports both
 mkdir -p hello
 cd hello
 NAME1=src NAME2=andrej/lamov GREET='hello world' ../template.sh ../test-project
@@ -50,7 +51,7 @@ Copying:
 
 This results in:
 
-#+BEGIN_SRC bash :results output
+#+BEGIN_SRC bash :results output :exports both
 tree hello
 cat hello/src/andrej/lamov/andrej/lamov-hello.txt
 #+END_SRC

@@ -36,7 +36,7 @@ validate_all_set() {
   do
     V="${!K}"
     if [ -z "$V" ]; then
-        VAR_NOT_SET=1
+      VAR_NOT_SET=1
     fi
     echo "  $K=$V"
   done

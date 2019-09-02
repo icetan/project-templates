@@ -1,31 +1,31 @@
-* Usage
-
-Given a project template:
+Given a project template with variables in paths and content
 
 #+BEGIN_SRC bash :results output :exports both
 tree test-project
+#+END_SRC
+
+#+RESULTS:
+: test-project
+: └── %NAME1%
+:     └── %NAME2%
+:         └── %NAME2%-hello.txt
+: 
+: 2 directories, 1 file
+
+#+BEGIN_SRC bash :results output :exports both
 cat test-project/%NAME1%/%NAME2%/%NAME2%-hello.txt
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-test-project
-└── %NAME1%
-    └── %NAME2%
-        └── %NAME2%-hello.txt
-
-2 directories, 1 file
-Test project
-
-%NAME1%.%NAME2%
-
-%GREET%
-
-How are you?
-
-#+end_example
-
-Now run template.sh with a template folder as input:
+: Test project
+: 
+: %NAME1%.%NAME2%
+: 
+: %GREET%
+: 
+: How are you?
+: 
+Now run ~template.sh~ with variables and a template folder:
 
 #+BEGIN_SRC bash :results output :exports both
 mkdir -p hello
@@ -33,6 +33,7 @@ cd hello
 NAME1=src NAME2=andrej/lamov GREET='hello world' ../template.sh ../test-project
 #+END_SRC
 
+It outputs some info...
 #+RESULTS:
 #+begin_example
 Source template:
@@ -49,29 +50,32 @@ Copying:
   %NAME1%/%NAME2%/%NAME2%-hello.txt -> src/andrej/lamov/andrej/lamov-hello.txt
 #+end_example
 
-This results in:
-
+And it results in the following structure
 #+BEGIN_SRC bash :results output :exports both
 tree hello
+#+END_SRC
+
+#+RESULTS:
+: hello
+: └── src
+:     └── andrej
+:         └── lamov
+:             └── andrej
+:                 └── lamov-hello.txt
+: 
+: 4 directories, 1 file
+
+
+#+BEGIN_SRC bash :results output :exports both
 cat hello/src/andrej/lamov/andrej/lamov-hello.txt
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-hello
-└── src
-    └── andrej
-        └── lamov
-            └── andrej
-                └── lamov-hello.txt
-
-4 directories, 1 file
-Test project
-
-src.andrej/lamov
-
-hello world
-
-How are you?
-
-#+end_example
+: Test project
+: 
+: src.andrej/lamov
+: 
+: hello world
+: 
+: How are you?
+: 

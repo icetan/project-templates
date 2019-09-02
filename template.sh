@@ -6,10 +6,10 @@ ROOT_LEN=$(expr length "$ROOT" + 2)
 
 gen_sed() {
   EXPR=""
-  for k in "$@"
+  for K in "$@"
   do
-    v="${!k}"
-    EXPR="$EXPR -e 's\\%$k%\\$v\\g'"
+    V="${!K}"
+    EXPR="$EXPR -e 's\\%$K%\\$V\\g'"
   done
   echo "$EXPR"
 }
@@ -46,30 +46,28 @@ validate_all_set() {
   fi
 }
 
-UNIQUE_VARS=$(unique_vars)
-
 echo "Source template:"
 echo "  $ROOT"
-
 echo "Target:"
 echo "  $(pwd)"
 echo "Variables:"
 
+UNIQUE_VARS=$(unique_vars)
 validate_all_set "$UNIQUE_VARS"
-
 SED_EXPR=$(gen_sed $UNIQUE_VARS)
+
 echo "Using sed:"
 echo "  $SED_EXPR"
 echo "Copying:"
 for FILE in $(find $ROOT -type f)
 do
-  OLD_FILE=$(echo "$FILE" \
+  REL_FILE=$(echo "$FILE" \
                | cut "-c$ROOT_LEN-")
 
   NEW_FILE=$(echo "$FILE" \
                | eval sed "$SED_EXPR" \
                | cut "-c$ROOT_LEN-")
-  echo "  $OLD_FILE -> $NEW_FILE"
+  echo "  $REL_FILE -> $NEW_FILE"
   mkdir -p "$(dirname "$NEW_FILE")"
   eval "sed $SED_EXPR $FILE > $NEW_FILE"
 done

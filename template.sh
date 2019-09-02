@@ -70,6 +70,6 @@ do
                | eval sed "$SED_EXPR" \
                | cut "-c$ROOT_LEN-")
   echo "  $OLD_FILE -> $NEW_FILE"
-  mkdir -vp "$(dirname "$NEW_FILE")"
+  mkdir -p "$(dirname "$NEW_FILE")"
   eval "sed $SED_EXPR $FILE > $NEW_FILE"
 done

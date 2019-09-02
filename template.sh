@@ -34,15 +34,15 @@ validate_all_set() {
   VAR_NOT_SET=0
   for K in $VARS
   do
-  V="${!K}"
-  if [ -z "$V" ]; then
-      VAR_NOT_SET=1
-  fi
-  echo "  $K=$V"
+    V="${!K}"
+    if [ -z "$V" ]; then
+        VAR_NOT_SET=1
+    fi
+    echo "  $K=$V"
   done
   if [ $VAR_NOT_SET -eq "1" ]; then
-      echo "All variables not set, aborting"
-      exit
+    echo "All variables not set, aborting"
+    exit
   fi
 }
 

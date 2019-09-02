@@ -1,0 +1,8 @@
+Test project
+
+%NAME1%.%NAME2%
+
+%GREET%
+
+How are you?
+

@@ -1,4 +1,4 @@
-Given a project template with variables in paths and content
+Given a project template folder with variables in paths and content
 
 #+BEGIN_SRC bash :results output :exports both
 tree test-project
@@ -25,7 +25,7 @@ cat test-project/%NAME1%/%NAME2%/%NAME2%-hello.txt
 : 
 : How are you?
 : 
-Now run ~template.sh~ with variables and a template folder:
+Now run ~template.sh~ with variables set in the environment and a path to a template folder
 
 #+BEGIN_SRC bash :results output :exports both
 mkdir -p hello

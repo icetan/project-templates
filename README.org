@@ -1,0 +1,76 @@
+* Usage
+
+Given a project template:
+
+#+BEGIN_SRC bash :results output
+tree test-project
+cat test-project/%NAME1%/%NAME2%/%NAME2%-hello.txt
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+test-project
+└── %NAME1%
+    └── %NAME2%
+        └── %NAME2%-hello.txt
+
+2 directories, 1 file
+Test project
+
+%NAME1%.%NAME2%
+
+%GREET%
+
+How are you?
+#+end_example
+
+Now run template.sh with a template folder as input:
+
+#+BEGIN_SRC bash :results output
+mkdir -p hello
+cd hello
+NAME1=src NAME2=andrej/lamov GREET='hello world' ../template.sh ../test-project
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+Source template:
+  /home/andrej/code/template/test-project
+Target:
+  /home/andrej/code/template/hello
+Variables:
+  GREET=hello world
+  NAME1=src
+  NAME2=andrej/lamov
+Using sed:
+   -e 's\%GREET%\hello world\g' -e 's\%NAME1%\src\g' -e 's\%NAME2%\andrej/lamov\g'
+Copying:
+  %NAME1%/%NAME2%/%NAME2%-hello.txt -> src/andrej/lamov/andrej/lamov-hello.txt
+#+end_example
+
+This results in:
+
+#+BEGIN_SRC bash :results output
+tree hello
+cat hello/src/andrej/lamov/andrej/lamov-hello.txt
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+hello
+└── src
+    └── andrej
+        └── lamov
+            └── andrej
+                └── lamov-hello.txt
+
+4 directories, 1 file
+Test project
+
+src.andrej/lamov
+
+hello world
+
+How are you?
+
+#+end_example

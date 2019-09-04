@@ -15,7 +15,7 @@ gen_sed() {
 }
 
 unique_vars() {
-  GREP_EXPR="%.*?%"
+  GREP_EXPR="%\S+?%"
   SED_EXPR="s\\%\\\\g"
 
   VARS_IN_PATHS=$(

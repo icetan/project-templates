@@ -58,11 +58,11 @@ echo >&2
 
 echo "set -xe"
 echo "SED_EXPR='$SED_EXPR'"
-find "$ROOT" | while read -r FILE
+find "$ROOT" -type f | while read -r FILE
 do
   [ "$FILE" == "$ROOT" ] && continue
   REL_FILE="${FILE#$ROOT/}"
   NEW_FILE="$PWD/$(sed "$SED_EXPR" <<<"${REL_FILE}")"
-  [ -d "$FILE" ] && echo "mkdir -p        '$NEW_FILE'"
-  [ -f "$FILE" ] && echo "sed \"\$SED_EXPR\" '$FILE' > '$NEW_FILE'"
+  echo "mkdir -p        '${NEW_FILE%/*}'"
+  echo "sed \"\$SED_EXPR\" '$FILE' > '$NEW_FILE'"
 done

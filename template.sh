@@ -1,17 +1,13 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
-ROOT=$(readlink -f $1)
-ROOT_LEN=$(expr length "$ROOT" + 2)
+ROOT=$(readlink -f "$1")
 
 gen_sed() {
-  EXPR=""
   for K in "$@"
   do
-    V="${!K}"
-    EXPR="$EXPR -e 's\\%$K%\\$V\\g'"
+    printf %s "s\\%$K%\\${!K}\\g; "
   done
-  echo "$EXPR"
 }
 
 unique_vars() {
@@ -29,45 +25,43 @@ unique_vars() {
 }
 
 validate_all_set() {
-  VARS=$1
-
   VAR_NOT_SET=0
-  for K in $VARS
+  for K in "$@"
   do
     V="${!K}"
     if [ -z "$V" ]; then
       VAR_NOT_SET=1
     fi
-    echo "  $K=$V"
+    echo >&2 "  $K=$V"
   done
   if [ $VAR_NOT_SET -eq "1" ]; then
-    echo "All variables not set, aborting"
-    exit
+    echo >&2 "All variables not set, aborting"
+    exit 1
   fi
 }
 
-echo "Source template:"
-echo "  $ROOT"
-echo "Target:"
-echo "  $(pwd)"
-echo "Variables:"
+echo >&2 "Source template:"
+echo >&2 "  $ROOT"
+echo >&2 "Target:"
+echo >&2 "  $PWD"
+echo >&2 "Variables:"
 
-UNIQUE_VARS=$(unique_vars)
-validate_all_set "$UNIQUE_VARS"
-SED_EXPR=$(gen_sed $UNIQUE_VARS)
+mapfile -t UNIQUE_VARS < <(unique_vars)
+validate_all_set "${UNIQUE_VARS[@]}"
+SED_EXPR=$(gen_sed "${UNIQUE_VARS[@]}")
 
-echo "Using sed:"
-echo "  $SED_EXPR"
-echo "Copying:"
-for FILE in $(find $ROOT -type f)
+echo >&2 "SED expression:"
+echo >&2 "  $SED_EXPR"
+echo >&2
+echo >&2 "Pipe to \`sh\` to execute:"
+echo >&2
+
+echo "SED_EXPR='$SED_EXPR'"
+find "$ROOT" | while read -r FILE
 do
-  REL_FILE=$(echo "$FILE" \
-               | cut "-c$ROOT_LEN-")
-
-  NEW_FILE=$(echo "$FILE" \
-               | eval sed "$SED_EXPR" \
-               | cut "-c$ROOT_LEN-")
-  echo "  $REL_FILE -> $NEW_FILE"
-  mkdir -p "$(dirname "$NEW_FILE")"
-  eval "sed $SED_EXPR $FILE > $NEW_FILE"
+  [ "$FILE" == "$ROOT" ] && continue
+  REL_FILE="${FILE#$ROOT/}"
+  NEW_FILE="$PWD/$(sed "$SED_EXPR" <<<"${REL_FILE}")"
+  [ -d "$FILE" ] && echo "mkdir -p        '$NEW_FILE'"
+  [ -f "$FILE" ] && echo "sed \"\$SED_EXPR\" '$FILE' > '$NEW_FILE'"
 done

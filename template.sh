@@ -56,6 +56,7 @@ echo >&2
 echo >&2 "Pipe to \`sh\` to execute:"
 echo >&2
 
+echo "set -xe"
 echo "SED_EXPR='$SED_EXPR'"
 find "$ROOT" | while read -r FILE
 do
